@@ -25,6 +25,14 @@ def get_kdvRepositories(kdv):
     return kdv['KdvRepositories']
 
 def write_logfile(request_datetime, responds_status_code, responds_time, logfile):
+    """
+
+    :param request_datetime:
+    :param responds_status_code:
+    :param responds_time:
+    :param logfile:
+    :return:
+    """
 
     if os.path.exists(logfile) == False:
         l = open(logfile, 'a')
@@ -37,8 +45,16 @@ def write_logfile(request_datetime, responds_status_code, responds_time, logfile
         l.close()
 
 def write_database(request_datetime, responds_status_code, responds_time, log_who, databasefile):
+    """
+    Find help on http://zetcode.com/db/sqlitepythontutorial/
 
-    # Find help on http://zetcode.com/db/sqlitepythontutorial/
+    :param request_datetime:
+    :param responds_status_code:
+    :param responds_time:
+    :param log_who:
+    :param databasefile:
+    :return:
+    """
 
     con = db.connect(databasefile)
     data = (request_datetime, responds_status_code, responds_time, log_who)
@@ -48,6 +64,13 @@ def write_database(request_datetime, responds_status_code, responds_time, log_wh
         cur.execute('INSERT INTO up_time VALUES (?,?,?,?)', data)
 
 def database2file(databasefile, filename , sqlquery):
+    """
+
+    :param databasefile:
+    :param filename:
+    :param sqlquery:
+    :return:
+    """
 
     import csv
     con = db.connect(databasefile)
@@ -62,6 +85,12 @@ def database2file(databasefile, filename , sqlquery):
             writer.writerows(data)
 
 def database2console(databasefile, sqlquery):
+    """
+
+    :param databasefile:
+    :param sqlquery:
+    :return:
+    """
 
     con = db.connect(databasefile)
 
@@ -105,7 +134,6 @@ if __name__ == '__main__':
 
         # write_logfile(request_datetime, responds_status_code, responds_time, logfile)
         write_database(request_datetime, responds_status_code, responds_time, log_who, databasefile)
-
 
         # Look up data
         sqlquery = "SELECT * FROM up_time order by Datetime desc"
