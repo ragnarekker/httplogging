@@ -156,7 +156,12 @@ if __name__ == '__main__':
         write2database(request_datetime, responds_status_code, responds_time, log_who, databasefile)
         # write2logfile(request_datetime, responds_status_code, responds_time, logfile)
 
-        # Look up data
+        # Write result to thingspeak.com for graphing on https://thingspeak.com/channels/23807
+        key_thingspeak = "insert_your_thingspeak_key"               # this is a peronalized key from thingspeak.com
+        url_thingspeak = "https://api.thingspeak.com/update?key={0}&field1={1}".format(key_thingspeak, responds_status_code)
+        requests.get(url_thingspeak)
+
+        # Look up data and write til logfile
         sqlquery = "SELECT * FROM up_time order by Datetime desc"
         database2file(databasefile, logfile, sqlquery)
         # database2console(databasefile, sqlquery)
