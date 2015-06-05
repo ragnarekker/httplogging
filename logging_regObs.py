@@ -55,17 +55,17 @@ def write2logfile(request_datetime, responds_status_code, responds_time, logfile
 
 def write2database(request_datetime, responds_status_code, responds_time, log_who, databasefile):
     """
-    Writes the result from the query and respondstime and html status code til the database.
+    Writes the result from the query and responds time and html status code til the database.
 
-    The databse is a sqllite database with one table generated with:
+    The database is a sqllite database with one table generated with:
     CREATE TABLE "up_time" ("Datetime" DATETIME, "html_code" INTEGER, "req_time" FLOAT, "log_who" TEXT)
 
     Some info I found useful on sqllite: http://zetcode.com/db/sqlitepythontutorial/
 
     :param request_datetime:        Time of the logging/request.
-    :param responds_status_code:    html-statuscode returned when request is requested.
-    :param responds_time:           Respondstime on the request.
-    :param log_who:                 URL to what is loged
+    :param responds_status_code:    html-status code returned when request is requested.
+    :param responds_time:           Responds time on the request.
+    :param log_who:                 URL to what is log'ed
     :param databasefile:            Path and name to the database.
     :return:                        No return variables.
     """
@@ -125,22 +125,17 @@ def database2console(databasefile, sqlquery):
         for row in rows:
             print row
 
+def make_request(url, responds_time, key_thingspeak=None, log_entry=None):
 
-if __name__ == '__main__':
-
-    # Set the variables to timeout-values. If we dont have timeout they will be overwritten.
+    # Set the variables to timeout-values. If we don't have timeout they will be overwritten.
     responds_status_code = 503
-    responds_time = 15.
-
-    # URL to what Im logging
-    url = "https://api.nve.no/hydrology/regobs/webapi/kdvelements"
 
     # On the topic of requests and exceptions on stackoverflow:
     # http://stackoverflow.com/questions/21407147/python-requests-exception-type-connectionerror-try-except-does-not-work
     try:
-        kdv = requests.get(url, timeout=15.)
-        responds_status_code = kdv.status_code
-        responds_time = kdv.elapsed.microseconds/1000000.           # convert microseconds to seconds
+        request = requests.get(url, timeout=responds_time)
+        responds_status_code = request.status_code
+        responds_time = request.elapsed.microseconds / 1000000.  # convert microseconds to seconds
     except ConnectionError as e:
         pass
     finally:
@@ -151,17 +146,27 @@ if __name__ == '__main__':
         log_who = log_who.replace('https://', '')
 
         # Write results to database or file
-        logfile = '{0}webapi.log'.format(path_logfile)
         databasefile = '{0}logging.sqlite'.format(path_db)
         write2database(request_datetime, responds_status_code, responds_time, log_who, databasefile)
         # write2logfile(request_datetime, responds_status_code, responds_time, logfile)
 
-        # Write result to thingspeak.com for graphing on https://thingspeak.com/channels/23807
-        key_thingspeak = "insert_your_thingspeak_key"               # this is a peronalized key from thingspeak.com
-        url_thingspeak = "https://api.thingspeak.com/update?key={0}&field1={1}".format(key_thingspeak, responds_status_code)
-        requests.get(url_thingspeak)
+        if key_thingspeak != None:
+            # Write result to thingspeak.com for graphing on https://thingspeak.com/channels/
+            key_thingspeak = "insert_your_thingspeak_key"  # this is a peronalized key from thingspeak.com
+            url_thingspeak = "https://api.thingspeak.com/update?key={0}&field1={1}".format(key_thingspeak, responds_status_code)
+            requests.get(url_thingspeak)
 
-        # Look up data and write til logfile
-        sqlquery = "SELECT * FROM up_time order by Datetime desc"
-        database2file(databasefile, logfile, sqlquery)
-        # database2console(databasefile, sqlquery)
+        if log_entry != None:
+            # Look up data and write til logfile
+            logfile = '{0}{1}.log'.format(path_logfile, log_entry)
+            sqlquery = 'SELECT * FROM up_time where log_who = "{0}"'.format(log_who)
+            database2file(databasefile, logfile, sqlquery)
+            # database2console(databasefile, sqlquery)
+
+if __name__ == '__main__':
+
+    log_entry = 'kdvelements'                                           # what am I logging?
+    url = "https://api.nve.no/hydrology/regobs/webapi/kdvelements"      # URL to what Im logging
+    responds_time = 15.                                                 # How long do we wait for a responds?
+    key_thingspeak = 'YOUR KEY HERE'                                    # If result is plotted on thingsspeak.com
+    make_request(url, responds_time, key_thingspeak=key_thingspeak, log_entry=log_entry)
