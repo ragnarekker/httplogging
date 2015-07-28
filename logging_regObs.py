@@ -11,7 +11,7 @@ import csv
 
 path_db = 'Logging/'
 path_logfile = 'Logging/'
-#path_logfile = 'mysite/logs/'  # location on ragnar.pythonanywhere.com
+#path_logfile = 'BottleSite/logs/'  # location on ragnar.pythonanywhere.com
 
 def get_kdvRepositories(kdv):
     """
