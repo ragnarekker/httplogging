@@ -159,7 +159,7 @@ def make_request(url, responds_time, key_thingspeak=None, log_entry=None):
         if log_entry != None:
             # Look up data and write til logfile
             logfile = '{0}{1}.log'.format(path_logfile, log_entry)
-            sqlquery = 'SELECT * FROM up_time where log_who = "{0}"'.format(log_who)
+            sqlquery = 'SELECT * FROM up_time where log_who = "{0}" ORDER BY Datetime desc LIMIT 672'.format(log_who)
             database2file(databasefile, logfile, sqlquery)
             # database2console(databasefile, sqlquery)
 
