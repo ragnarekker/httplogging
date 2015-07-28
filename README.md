@@ -7,7 +7,7 @@ The script saves to a sqllite database and is intended to run as a sheduled task
 
 Output is a select from database and save to file.
 
-Example of the script running on a 15min sheduled task can be seen on http://ragnar.pythonanywhere.com/logs/webapi.log
+Example of the script running on a 15min sheduled task can be seen on http://ragnar.pythonanywhere.com/logs/
 
 Output is also posted on thingspeak.com on the graph https://thingspeak.com/channels/23807
 
