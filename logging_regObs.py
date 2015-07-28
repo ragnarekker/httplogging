@@ -152,7 +152,7 @@ def make_request(url, responds_time, key_thingspeak=None, log_entry=None):
 
         if key_thingspeak != None:
             # Write result to thingspeak.com for graphing on https://thingspeak.com/channels/
-            key_thingspeak = "insert_your_thingspeak_key"  # this is a peronalized key from thingspeak.com
+            # key_thingspeak = "insert_your_thingspeak_key"  # this is a peronalized key from thingspeak.com
             url_thingspeak = "https://api.thingspeak.com/update?key={0}&field1={1}".format(key_thingspeak, responds_status_code)
             requests.get(url_thingspeak)
 
@@ -170,3 +170,8 @@ if __name__ == '__main__':
     responds_time = 15.                                                 # How long do we wait for a responds?
     key_thingspeak = 'YOUR KEY HERE'                                    # If result is plotted on thingsspeak.com
     make_request(url, responds_time, key_thingspeak=key_thingspeak, log_entry=log_entry)
+
+    log_entry = 'getobservationswithinradius'
+    url = 'https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON'
+    responds_time = 15.
+    make_request(url, responds_time, log_entry=log_entry)
