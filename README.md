@@ -1,16 +1,10 @@
-http-logging
+httplogging
 ============
 
-A simple tool for logging html statuscode and respondstime from a url. In this case the url is a list of keys used in regObs, thus the looging is intended to watch out for downtime on https://api.nve.no/hydrology/regobs/webapi/ which is esentila for the regObs app to work.
+This is a simple tool for logging html status code and responds time from urls in Varsom. There are methods for logging urls on regObs, chartserver and GTS and on the two latter applications several parameters are logged and received data is compared with requested data.
 
-The script saves to a sqllite database and is intended to run as a sheduled task. The database i one table generated with: CREATE TABLE "up_time" ("Datetime" DATETIME, "html_code" INTEGER, "req_time" FLOAT, "log_who" TEXT) Some info I found useful on sqllite: http://zetcode.com/db/sqlitepythontutorial/
+The script saves results to different tables in a sqllite3 database and is intended to run as a scheduled task. Output is a select from this database and save to text file and optionally a plot.
 
-Output is a select from database and save to file.
-
-Example of the script running on a 15min sheduled task can be seen on http://ragnar.pythonanywhere.com/logs/
-
-Output is also posted on thingspeak.com on the graph https://thingspeak.com/channels/23807
-
-
+Example of the script running on a 15min scheduled task can be seen on http://ragnar.pythonanywhere.com/logs/
 
 

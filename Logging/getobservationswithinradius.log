@@ -1,5 +1,0 @@
-Datetime (Server is UTC0)	Status	Elapsed s	Who is logged?
-2015-06-05 23:21:30	200	0.777767	api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
-2015-06-05 23:24:14	200	0.590334	api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
-2015-06-05 23:25:24	200	0.913276	api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
-2015-06-05 23:25:50	200	0.496847	api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON

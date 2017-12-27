@@ -4,7 +4,7 @@ __author__ = 'ragnarekker'
 import sqlite3 as lite
 import datetime
 
-con = lite.connect('Logging/logging.sqlite')
+con = lite.connect('logging/logging.sqlite')
 
 data = (
            (datetime.datetime.now(), 200, 1.896, "rO webAPI"),
