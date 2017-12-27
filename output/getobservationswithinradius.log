@@ -1,4 +1,5 @@
 date_and_time (Server is UTC0)	log_who_short_name	http_code	responds_time (s)	responds_size (bytes)	log_who
+2017-12-27 22:38:04	getobservationswithinradius	200	0.1596	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
 2017-12-27 21:57:41	getobservationswithinradius	200	0.277252	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
 2017-12-27 20:53:18	getobservationswithinradius	200	0.187208	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
 2017-12-27 20:38:20	getobservationswithinradius	200	0.681713	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
@@ -670,4 +671,3 @@ date_and_time (Server is UTC0)	log_who_short_name	http_code	responds_time (s)	re
 2017-12-20 21:08:23	getobservationswithinradius	200	0.546662	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
 2017-12-20 20:53:13	getobservationswithinradius	200	0.661784	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
 2017-12-20 20:38:12	getobservationswithinradius	200	0.511126	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON
-2017-12-20 20:23:18	getobservationswithinradius	200	0.541926	2305	https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON

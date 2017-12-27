@@ -142,7 +142,7 @@ def db_to_file(database_file, log_file_name, sql_query, log_file_header=False):
         data = cur.execute(sql_query)
 
         with open(log_file_name, 'w', encoding='utf-8') as f:
-            writer = csv.writer(f, delimiter='\t')
+            writer = csv.writer(f, delimiter='\t',  lineterminator='\n')
             if log_file_header:
                 writer.writerow(log_file_header)
             writer.writerows(data)
