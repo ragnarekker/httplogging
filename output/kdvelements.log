@@ -1,4 +1,5 @@
 date_and_time (Server is UTC0)	log_who_short_name	http_code	responds_time (s)	responds_size (bytes)	log_who
+2017-12-28 18:13:59	kdvelements	200	0.091668	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
 2017-12-27 22:38:04	kdvelements	200	0.092334	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
 2017-12-27 21:57:41	kdvelements	200	0.103975	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
 2017-12-27 20:53:18	kdvelements	200	0.470032	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
@@ -670,4 +671,3 @@ date_and_time (Server is UTC0)	log_who_short_name	http_code	responds_time (s)	re
 2017-12-20 19:23:22	kdvelements	200	0.504728	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
 2017-12-20 19:08:16	kdvelements	200	0.478858	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
 2017-12-20 18:53:11	kdvelements	200	0.467745	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements
-2017-12-20 18:38:15	kdvelements	200	0.530929	19629	https://api.nve.no/hydrology/regobs/webapi/kdvelements

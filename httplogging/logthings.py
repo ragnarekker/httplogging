@@ -96,7 +96,7 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
 
     for parameter in parameters:
         days_requested = 21
-        to_date = dt.date.today() + dt.timedelta(days=2)
+        to_date = dt.date.today() + dt.timedelta(days=9)
         from_date = to_date - dt.timedelta(days=(days_requested - 1))
         to_date = to_date.strftime('%Y-%m-%d')  # '20171205'
         from_date = from_date.strftime('%Y-%m-%d')  # '20171213'
@@ -112,8 +112,10 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
             response_text = response.text
             full_data = response.json()
             data = full_data['Data']
+            no_data_value = int(full_data['NoDataValue'])
+            data_without_nodata = [d for d in data if d != no_data_value]
 
-            days_received = len(data)
+            days_received = len(data_without_nodata)
             http_code = response.status_code
             response_time = response.elapsed.microseconds / 1000000.    # convert microseconds to seconds
 
@@ -160,7 +162,7 @@ def log_chartserver(parameters=None, write_to_file=False, make_plot=False):
 
     for parameter in parameters:
         days_requested = 21
-        to_date = dt.date.today() + dt.timedelta(days=2)
+        to_date = dt.date.today() + dt.timedelta(days=9)
         from_date = to_date - dt.timedelta(days=(days_requested-1))
         to_date = to_date.strftime('%Y%m%d')                # '20171205'
         from_date = from_date.strftime('%Y%m%d')            # '20171213'
