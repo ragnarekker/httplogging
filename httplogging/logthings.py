@@ -13,10 +13,11 @@ __author__ = 'ragnarekker'
 def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=False, make_plot=False):
     """
 
-    :param log_name:
-    :param url:
-    :param max_responds_time:
-    :param write_to_file:
+    :param log_name:            [string] Name of what is to be logged. Used in file names and plots
+    :param url:                 [string] URL to be logged
+    :param max_responds_time:   [int] seconds to timeout
+    :param write_to_file:       [bool] If true a log file is made
+    :param make_plot:           [bool] If true a plot is made
     :return:
     """
 
