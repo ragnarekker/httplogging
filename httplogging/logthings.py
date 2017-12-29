@@ -46,7 +46,7 @@ def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=
         database_file = '{0}logging.sqlite'.format(se.db_location)
         io.db_insert_up_time(date_and_time, log_name, responds_status_code, responds_time, responds_size, log_who, database_file)
 
-        days_to_plot = 10
+        days_to_plot = 11
         sql_query = 'SELECT * ' \
                     'FROM up_time ' \
                     'WHERE log_who_short_name = "{0}" ' \
@@ -142,7 +142,7 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
             log_time, parameter, http_code, response_time, days_requested, days_received,
             url, response_text, database_file)
 
-    days_to_plot = 10
+    days_to_plot = 11
     sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received ' \
                 'FROM gts_up_time ' \
                 'ORDER BY date_and_time DESC LIMIT 960'.format(days_to_plot * 24 * 4 * 3)
