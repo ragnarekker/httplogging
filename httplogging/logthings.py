@@ -10,7 +10,7 @@ from httplogging import makelogs as ml
 __author__ = 'ragnarekker'
 
 
-def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=False):
+def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=False, make_plot=False):
     """
 
     :param log_name:
@@ -46,15 +46,23 @@ def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=
         database_file = '{0}logging.sqlite'.format(se.db_location)
         io.db_insert_up_time(date_and_time, log_name, responds_status_code, responds_time, responds_size, log_who, database_file)
 
+        days_to_plot = 10
+        sql_query = 'SELECT * ' \
+                    'FROM up_time ' \
+                    'WHERE log_who_short_name = "{0}" ' \
+                    'ORDER BY date_and_time DESC LIMIT {1}'.format(log_name, days_to_plot * 24 * 4)
+
         if write_to_file:
             # Look up data and write til log file
             file_name = '{0}{1}.log'.format(se.output_log, log_name)
-            sql_query = 'SELECT * FROM up_time WHERE log_who_short_name = "{0}" ORDER BY date_and_time DESC LIMIT 672'.format(log_name)
             log_file_header = ['date_and_time (Server is UTC0)', 'log_who_short_name', 'http_code', 'responds_time (s)', 'responds_size (bytes)', 'log_who']
             io.db_to_file(database_file, file_name, sql_query, log_file_header=log_file_header)
 
+        if make_plot:
+            io.db_to_plot_up_time(database_file,sql_query, log_name)
 
-def log_kdvelements(write_to_file=False):
+
+def log_kdvelements(write_to_file=False, make_plot=False):
     """
 
     :param write_to_file:
@@ -64,10 +72,10 @@ def log_kdvelements(write_to_file=False):
     log_name = 'kdvelements'                                           # what am I logging?
     url = "https://api.nve.no/hydrology/regobs/webapi/kdvelements"      # URL to what Im logging
     max_responds_time = 15.                                             # How long do we wait for a responds?
-    _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file)
+    _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file, make_plot=make_plot)
 
 
-def log_getobservationswithinradius(write_to_file=False):
+def log_getobservationswithinradius(write_to_file=False, make_plot=False):
     """
 
     :param write_to_file:
@@ -77,7 +85,7 @@ def log_getobservationswithinradius(write_to_file=False):
     log_name = 'getobservationswithinradius'
     url = 'https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON'
     max_responds_time = 15.
-    _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file)
+    _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file, make_plot=make_plot)
 
 
 def log_gts(parameters=None, write_to_file=False, make_plot=False):
@@ -107,6 +115,8 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
               'theme={2}&startdate={0}&enddate={1}&x=111899&y=6730791'\
             .format(from_date, to_date, parameter)
 
+        response_text = ''
+
         try:
             response = rq.get(url)
             response_text = response.text
@@ -121,9 +131,9 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
 
         except:
             error_msg = sys.exc_info()[0]
-            ml.log_and_print('logthings.py -> log_gts: Error requesting {}. {}'.format(url, error_msg))
+            ml.log_and_print('logthings.py -> log_gts: {} Error requesting {}. {}'.format(error_msg, url, response_text))
 
-            http_code = 0
+            http_code = 503     # most likely
             response_time = 0
             days_received = 0
             response_text = ''
@@ -132,15 +142,18 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
             log_time, parameter, http_code, response_time, days_requested, days_received,
             url, response_text, database_file)
 
+    days_to_plot = 10
+    sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received ' \
+                'FROM gts_up_time ' \
+                'ORDER BY date_and_time DESC LIMIT 960'.format(days_to_plot * 24 * 4 * 3)
+
     if write_to_file:
         # Look up data and write til log file
         file_name = '{0}{1}.log'.format(se.output_log, 'gts')
-        sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received FROM gts_up_time ORDER BY date_and_time DESC'
         log_file_header = ['date_and_time', 'parameter', 'http_code', 'responds_time', 'days_requested', 'days_received']
         io.db_to_file(database_file, file_name, sql_query, log_file_header=log_file_header)
 
     if make_plot:
-        sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received FROM gts_up_time ORDER BY date_and_time DESC'
         io.db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_identifyer='gts')
 
     return
@@ -213,15 +226,18 @@ def log_chartserver(parameters=None, write_to_file=False, make_plot=False):
             log_time, parameter, http_code, response_time, days_requested, days_received,
             url, data, database_file)
 
+    days_to_plot = 10
+    sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received ' \
+                'FROM chartserver_up_time ' \
+                'ORDER BY date_and_time DESC LIMIT {}'.format(days_to_plot * 24 * 4 * 3)
+
     if write_to_file:
         # Look up data and write til log file
         file_name = '{0}{1}.log'.format(se.output_log, 'chartserver')
-        sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received FROM chartserver_up_time ORDER BY date_and_time DESC'
         log_file_header = ['date_and_time', 'parameter', 'http_code', 'responds_time', 'days_requested', 'days_received']
         io.db_to_file(database_file, file_name, sql_query, log_file_header=log_file_header)
 
     if make_plot:
-        sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received FROM chartserver_up_time ORDER BY date_and_time DESC'
         io.db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_identifyer='chartserver')
 
 

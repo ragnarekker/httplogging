@@ -167,13 +167,79 @@ def db_to_console(database_file, sql_query):
             print(row)
 
 
-def db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_identifyer='chartserver'):
+def db_to_plot_up_time(database_file, sql_query, file_identifyer):
     """
 
     :param database_file:
     :param sql_query:
-    :param parameters:
     :param file_identifyer:
+    :return:
+    """
+
+    con = db.connect(database_file)
+    con.row_factory = db.Row
+
+    plot_file_name = '{}{}_log.png'.format(se.plot_folder, file_identifyer)
+    data = {}
+
+    with con:
+        cur = con.cursor()
+        cur.execute(sql_query)
+        all_rows = cur.fetchall()
+        headers = all_rows[0].keys()
+
+        # Make dictionary with column headers as keys and data in list as values
+        for i, h in enumerate(headers):
+            data[headers[i]] = []
+
+        for row in all_rows:
+            data_row = tuple(row)
+            for i, d in enumerate(data_row):
+                if i == 0:  # fist column is the date time
+                    d = dt.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+                data[headers[i]].append(d)
+
+    fsize = (12, 9)
+    plt.figure(figsize=fsize)
+    plt.clf()
+
+    plt.suptitle('{} log'.format(file_identifyer), fontsize=28)
+
+    # http code
+    plt.subplot2grid((3, 1), (0, 0), rowspan=1)
+    plt.plot(data[headers[0]], data[headers[2]], 'mo')
+    plt.ylabel('HTTP code')
+    plt.ylim(ymin=-50, ymax=550)
+
+    # responds time
+    plt.subplot2grid((3, 1), (1, 0), rowspan=1)
+    plt.plot(data[headers[0]], data[headers[3]], color='black')
+    plt.ylabel('Responds time [s]')
+    plt.ylim(ymin=0,ymax=2)
+
+    # data received in kilo bytes
+    plt.subplot2grid((3, 1), (2, 0), rowspan=1)
+    if 'kdvelements' in file_identifyer:
+        face_color = 'peachpuff'
+    elif 'getobservationswithinradius' in file_identifyer:
+        face_color = 'pink'
+    else:
+        face_color = 'lightgray'
+    plt.fill_between(data[headers[0]], 0, data[headers[4]], facecolor=face_color)
+    plt.ylabel('Received data [Bytes]')
+
+    plt.savefig(plot_file_name)
+    plt.close()
+
+
+def db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_identifyer='chartserver'):
+    """Plots three subplots with http responds, responds time and an area plot for how many days of data
+    is recieved.
+
+    :param database_file:       [string] full path to the sqlite database containing the data.
+    :param sql_query:           [string] The query to the sqlite database used to receive the data sett for the plot.
+    :param parameters:          [list of strings] Eg. ['sdfsw', 'tm', 'sd']
+    :param file_identifyer:     [string] 'chartserver' or 'gts'
     :return:
     """
 
@@ -191,6 +257,7 @@ def db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_id
             all_rows = cur.fetchall()
             headers = all_rows[0].keys()
 
+            # Make dictionary with column headers as keys and data in list as values
             for i, h in enumerate(headers):
                 data[headers[i]] = []
 
@@ -212,6 +279,7 @@ def db_to_plot_chartserver_and_gts(database_file, sql_query, parameters, file_id
         plt.subplot2grid((3, 1), (0, 0), rowspan=1)
         plt.plot(data[headers[0]], data[headers[2]], 'mo')
         plt.ylabel('HTTP code')
+        plt.ylim(ymin=-50, ymax=550)
 
         # responds time
         plt.subplot2grid((3, 1), (1, 0), rowspan=1)
