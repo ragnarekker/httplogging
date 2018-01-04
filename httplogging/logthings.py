@@ -146,7 +146,7 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
     days_to_plot = 11
     sql_query = 'SELECT date_and_time, parameter, http_code, responds_time, days_requested, days_received ' \
                 'FROM gts_up_time ' \
-                'ORDER BY date_and_time DESC LIMIT 960'.format(days_to_plot * 24 * 4 * 3)
+                'ORDER BY date_and_time DESC LIMIT {}'.format(days_to_plot * 24 * 4 * 3)
 
     if write_to_file:
         # Look up data and write til log file
