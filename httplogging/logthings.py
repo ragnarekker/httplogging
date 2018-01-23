@@ -11,7 +11,8 @@ __author__ = 'ragnarekker'
 
 
 def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=False, make_plot=False):
-    """
+    """For a given URL, make a request and log the size of the responds, the http status code and the responds time.
+    Data is written to a sqlite3 database. Optionally a plot and a file output is made.
 
     :param log_name:            [string] Name of what is to be logged. Used in file names and plots
     :param url:                 [string] URL to be logged
@@ -22,7 +23,7 @@ def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=
     """
 
     # Set the variables to timeout-values. If we don't have timeout they will be overwritten.
-    responds_status_code = 503
+    responds_status_code = 0
     responds_time = max_responds_time
     responds_size = 0
 
@@ -35,13 +36,16 @@ def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=
         responds_time = request.elapsed.microseconds / 1000000.  # convert microseconds to seconds
 
     except ConnectionError as e:
+        ml.log_and_print('logthings.py -> _make_request_and_log_to_db: ConnectionError for {}'.format(log_name))
         pass
+
+    except:
+        error_msg = sys.exc_info()[0]
+        ml.log_and_print('logthings.py -> _make_request_and_log_to_db: Error requesting for {} {}'.format(log_name, error_msg))
 
     finally:
         date_and_time = dt.datetime.now().replace(microsecond=0)  # remove microseconds
         log_who = url
-        #log_who = log_who.replace('http://', '')
-        #log_who = log_who.replace('https://', '')
 
         # Write results to database or file
         database_file = '{0}logging.sqlite'.format(se.db_location)
@@ -64,14 +68,14 @@ def _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=
 
 
 def log_kdvelements(write_to_file=False, make_plot=False):
-    """
+    """Log regObs kdv-elements. Important for using the app.
 
     :param write_to_file:
     :return:
     """
 
     log_name = 'kdvelements'                                           # what am I logging?
-    url = "https://api.nve.no/hydrology/regobs/webapi/kdvelements"      # URL to what Im logging
+    url = 'https://api.nve.no/hydrology/regobs/webapi_v3.2.0/kdvelements/getkdvs/'      # URL to what Im logging
     max_responds_time = 15.                                             # How long do we wait for a responds?
     _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file, make_plot=make_plot)
 
@@ -84,7 +88,7 @@ def log_getobservationswithinradius(write_to_file=False, make_plot=False):
     """
 
     log_name = 'getobservationswithinradius'
-    url = 'https://api.nve.no/hydrology/RegObs/webapi/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON'
+    url = 'https://api.nve.no/hydrology/regobs/webapi_v3.2.0/Observations/GetObservationsWithinRadius?latitude=59.844226&longitude=10.42702&range=100000&geohazardId=70&$format=JSON'
     max_responds_time = 15.
     _make_request_and_log_to_db(log_name, url, max_responds_time, write_to_file=write_to_file, make_plot=make_plot)
 
@@ -134,7 +138,7 @@ def log_gts(parameters=None, write_to_file=False, make_plot=False):
             error_msg = sys.exc_info()[0]
             ml.log_and_print('logthings.py -> log_gts: {} Error requesting {}. {}'.format(error_msg, url, response_text))
 
-            http_code = 503     # most likely
+            http_code = 0
             response_time = 0
             days_received = 0
             response_text = ''
